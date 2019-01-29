@@ -250,14 +250,14 @@ def extract_devices(rawdevices):
     devices = {}
     for rdevice in rawdevices['Devices']:
         if 'SerialNumber' in rdevice:
-            id = str(rdevice['Id']['Value'])
-            devices[id] = {}
-            devices[id]['serial'] = rdevice['SerialNumber']
-            devices[id]['id'] = id
-            devices[id]['smartgroups'] = []
+            item_id = str(rdevice['Id']['Value'])
+            devices[item_id] = {}
+            devices[item_id]['serial'] = rdevice['SerialNumber']
+            devices[item_id]['id'] = item_id
+            devices[item_id]['smartgroups'] = []
 
             if rdevice['UserName'] and rdevice['UserName'] not in AIRWATCH_USERS_IGNORE:
-                devices[id]['user'] = rdevice['UserName']
+                devices[item_id]['user'] = rdevice['UserName']
 
     return devices
 
@@ -360,14 +360,14 @@ def sync_device(api, serial_number):
         log('Unable to find device in AirWatch', )
         exit(1)
 
-    id = str(rawdevice['Id']['Value'])
-    devices[id] = {}
-    devices[id]['id'] = id
-    devices[id]['serial'] = serial_number
-    devices[id]['smartgroups'] = []
+    item_id = str(rawdevice['Id']['Value'])
+    devices[item_id] = {}
+    devices[item_id]['id'] = item_id
+    devices[item_id]['serial'] = serial_number
+    devices[item_id]['smartgroups'] = []
 
     if 'UserName' in rawdevice:
-        devices[id]['user'] = {'name': rawdevice['UserName']}
+        devices[item_id]['user'] = {'name': rawdevice['UserName']}
 
     # Get desired AirWatch smartgroups
     rawsmartgroups = api.smartgroups.search()
