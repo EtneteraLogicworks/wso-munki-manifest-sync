@@ -281,7 +281,7 @@ def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
             devices[smartmember['Id']]['smartgroups'].append(smartgroup['name'])
         else:
             if not single_device:
-                print('Unknown device: {} in smartgroup {}'.format(smartmember['Id'], smartgroup['name']))
+                log('ERROR', 'Unknown device: {} in smartgroup {}'.format(smartmember['Id'], smartgroup['name']))
                 exit(1)
 
 def assign_user(users, devices):
@@ -393,12 +393,13 @@ def main(args):
 
     # Sync single serial number only
     if args.serial:
-        print('Syncing only manifest with serial number {}'.format(args.serial))
+        log('INFO', 'Syncing only manifest with serial number {}'.format(args.serial))
         sync_device(api, args.serial)
         exit(0)
 
     # Sync all devices in regular run
-    sync_all_devicec(api)
+    log('INFO', 'Syncing all devices')
+    sync_all_devices(api)
     exit(0)
 
 if __name__ == '__main__':
