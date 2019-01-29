@@ -11,7 +11,7 @@ AIRWATCH_MAC_PLATFORM = 'AppleOsX'
 AIRWATCH_ALL_USERGROUPS = False
 AIRWATCH_ALL_SMARTGROUPS = False
 AIRWATCH_USERGROUPS = ['SomeUserGroup']
-AIRWATCH_SMARTGROUPS = [ 'SomeSmartGroup']
+AIRWATCH_SMARTGROUPS = ['SomeSmartGroup']
 AIRWATCH_USERS_IGNORE = ['Default Staging User', 'staging']
 
 # Munki paths config

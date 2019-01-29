@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 
 import plistlib
-import os
 import sys
 import argparse
 import copy
-import pprint
 try:
     from pathlib import Path
 except (ImportError, AttributeError):
@@ -23,13 +21,14 @@ __metaclass__ = type
 # Helper functions
 
 def eprint(*args, **kwargs):
+    """Prints to stderr"""
     print(*args, file=sys.stderr, **kwargs)
 
 def log(level, message, ):
-    '''Message logger, prints to stdout/stderr.'''
-    if level == 'Error':
+    """Logs messages with various severities"""
+    if level == 'ERROR':
         eprint("{}: {}".format(level, message))
-    elif level == 'Debug' and SCRIPT_VERBOSITY == True:
+    elif level == 'DEBUG' and SCRIPT_VERBOSE:
         print("{}: {}".format(level, message))
     else:
         print("{}: {}".format(level, message))
@@ -294,7 +293,7 @@ def assign_user(users, devices):
 
 # Query API a get necessary information  - - - - - - - - - - - - - - - - - - - - - - - - -
 
-def sync_all_devicec(api):
+def sync_all_devices(api):
     """Syncs all manifests"""
 
     # Get all AirWatch users
@@ -392,7 +391,6 @@ def main(args):
     # Create API object
     api = AirWatchAPI(env=AIRWATCH_SERVER, apikey=APIKEY, username=USERNAME, password=PASSWORD)
 
-
     # Sync single serial number only
     if args.serial:
         print('Syncing only manifest with serial number {}'.format(args.serial))
@@ -405,9 +403,8 @@ def main(args):
 
 if __name__ == '__main__':
 
-    # Argument parser
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--serial", help="sync serial number only")
-    args = parser.parse_args()
+    PARSER = argparse.ArgumentParser()
+    PARSER.add_argument("--serial", help="sync serial number only")
+    ARGUMENTS = PARSER.parse_args()
 
     main(args)
