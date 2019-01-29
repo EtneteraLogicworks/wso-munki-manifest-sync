@@ -354,11 +354,7 @@ def sync_device(api, serial_number):
 
     devices = {}
 
-    try:
-        rawdevice = api.devices.get_details_by_alt_id(serialnumber=serial_number)
-    except AirWatchAPIError:
-        log('Unable to find device in AirWatch', )
-        exit(1)
+    rawdevice = api.devices.get_details_by_alt_id(serialnumber=serial_number)
 
     item_id = str(rawdevice['Id']['Value'])
     devices[item_id] = {}
@@ -408,4 +404,9 @@ if __name__ == '__main__':
     PARSER.add_argument("--serial", help="sync serial number only")
     ARGUMENTS = PARSER.parse_args()
 
-    main(args)
+    try:
+        main(ARGUMENTS)
+    except AirWatchAPIError as aw_error:
+        log('ERROR', 'Problem when talking with AirWatch API')
+        log('ERROR', aw_error)
+        exit(1)
