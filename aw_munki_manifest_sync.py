@@ -377,9 +377,6 @@ def sync_device(api, serial_number):
             # Assin smartgroups to devices
             assign_smartgroups(devices, smartgroup, smartmembers, single_device=True)
 
-    # Not needed. We touch only device manifest file in sync_device()
-    #handle_smartgroup_manifests(smartgroups)
-
     handle_device_manifests(devices)
 
 # Main: run script, parse arguments anc sync those manifests - - - - - - - - - - - - - - -
