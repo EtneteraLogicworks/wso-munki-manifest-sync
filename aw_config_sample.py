@@ -27,3 +27,4 @@ DEFAULT_DEVICE_MANIFEST = {'catalogs': ['production'], 'included_manifests':['gr
 
 # Scrit settings
 SCRIPT_VERBOSE = True
+SCRIPT_LOGFILE = '/path/to/log/file.log'

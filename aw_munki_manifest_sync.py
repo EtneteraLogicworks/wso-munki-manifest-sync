@@ -4,6 +4,7 @@ import plistlib
 import sys
 import argparse
 import copy
+import logging
 try:
     from pathlib import Path
 except (ImportError, AttributeError):
@@ -18,20 +19,37 @@ from PyVMwareAirWatch.pyairwatch.client import AirWatchAPIError
 # For Python 2 compatibility
 __metaclass__ = type
 
-# Helper functions
+# Helper functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-def eprint(*args, **kwargs):
-    """Prints to stderr"""
-    print(*args, file=sys.stderr, **kwargs)
+def setup_custom_logger(name):
+    """Creates custom logger"""
 
-def log(level, message, ):
+    logger = logging.getLogger(name)
+
+    formatter = logging.Formatter(fmt='%(asctime)s %(levelname)-8s %(message)s',
+                                  datefmt='%Y-%m-%d %H:%M:%S')
+
+    try:
+        file_handler = logging.FileHandler(SCRIPT_LOGFILE)
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
+    except PermissionError as log_error:
+        sys.stderr.write('ERROR: Unable to crete log file bacause: {}'.format(log_error))
+
+    return logger
+
+def log(level, message):
     """Logs messages with various severities"""
+
+    if level == 'CRITICAL':
+        LOGGER.critical(message)
     if level == 'ERROR':
-        eprint("{}: {}".format(level, message))
+        LOGGER.error(message)
+    elif level == 'INFO':
+        LOGGER.info(message)
     elif level == 'DEBUG' and SCRIPT_VERBOSE:
-        print("{}: {}".format(level, message))
-    else:
-        print("{}: {}".format(level, message))
+        LOGGER.debug(message)
 
 # Classes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -268,7 +286,7 @@ def assign_groups(users, group, members):
         if member['UserName'] in users:
             users[member['UserName']]['groups'].append(group['name'])
         else:
-            print('Unknown user: {} in group {}'.format(member['UserName'], group['name']))
+            log('CRITICAL', 'Unknown user: {} in group {}'.format(member['UserName'], group['name']))
             exit(1)
 
 def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
@@ -281,7 +299,7 @@ def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
             devices[smartmember['Id']]['smartgroups'].append(smartgroup['name'])
         else:
             if not single_device:
-                log('ERROR', 'Unknown device: {} in smartgroup {}'.format(smartmember['Id'], smartgroup['name']))
+                log('CRITICAL', 'Unknown device: {} in smartgroup {}'.format(smartmember['Id'], smartgroup['name']))
                 exit(1)
 
 def assign_user(users, devices):
@@ -386,18 +404,23 @@ def main(args):
     # Create API object
     api = AirWatchAPI(env=AIRWATCH_SERVER, apikey=APIKEY, username=USERNAME, password=PASSWORD)
 
+    log('INFO', 'Script run start')
+
     # Sync single serial number only
     if args.serial:
-        log('INFO', 'Syncing only manifest with serial number {}'.format(args.serial))
+        log('INFO', 'Mode: Syncing only manifest with serial number {}'.format(args.serial))
         sync_device(api, args.serial)
-        exit(0)
-
     # Sync all devices in regular run
-    log('INFO', 'Syncing all devices')
-    sync_all_devices(api)
+    else:
+        log('INFO', 'Mode: Syncing all devices')
+        sync_all_devices(api)
+
+    log('INFO', 'Script run end')
     exit(0)
 
 if __name__ == '__main__':
+
+    LOGGER = setup_custom_logger('aw_munki_manifest_sync')
 
     PARSER = argparse.ArgumentParser()
     PARSER.add_argument("--serial", help="sync serial number only")
