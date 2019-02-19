@@ -46,7 +46,6 @@ Will result in following Munki manifest structure:
 Script is configured via config file `aw_config.py` which must be located in same directory
 as script itself.
 
-| ------------------------- | ---------- | -------------------------- |
 | Key                       | Type       |                            |
 | ------------------------- | ---------- | -------------------------- |
 | AirWatch API access       |            |                            |
