@@ -48,30 +48,27 @@ as script itself.
 
 | Key                       | Type       |                            |
 | ------------------------- | ---------- | -------------------------- |
-| AirWatch API access       |            |                            |
 | AIRWATCH_SERVER           | String     | AirWatch server URL        |
 | APIKEY                    | String     | AirWatch API key           |
 | USERNAME                  | String     | AirWatch API user name     |
 | PASSWORD                  | String     | AirWatch API user password |
 |                           |            |                            |
-| Script operation          |            |                            |
 | AIRWATCH_MAC_PLATFORM     | String     | AirWatch Mac platform identifier. Should be left to default `AppleOsX`  |
 | AIRWATCH_ALL_USERGROUPS   | Boolean    | If True script will attempt to sync all usergroups |
 | AIRWATCH_ALL_SMARTGROUPS  | Boolean    | If True script will attempt to sync all smartgroups |
 | AIRWATCH_USERGROUPS       | Array      | List of usergroups which should be synced |
 | AIRWATCH_SMARTGROUPS      | Array      | List of smartgroups which should be synced |
 | AIRWATCH_USERS_IGNORE     | Array      | List of user which should not be synced. Good for exlucing staging users |
-| SCRIPT_VERBOSE            | Boolean    | Enable verbose logging     |
-| SCRIPT_LOGFILE            | Path       | If defined, script will log to file |
 |                           |            |                            |
-| Manifest configuration    |            |                            |
 | MANIFEST_DIR              | Path       | Absolute path to manifest directory |
 | MANIFEST_DEVICE_DIR       | String     | Relative path to device manifest subdirectory |
 | MANIFEST_USER_DIR         | String     | Relative path to user manifest subdirectory |
 | MANIFEST_USERGROUP_DIR    | String     | Relative path to usergroup manifest subdirectory |
 | MANIFEST_SMARTGROUP_DIR   | String     | Relative path to smarrgroup manifest subdirectory |
 | DEFAULT_DEVICE_MANIFEST   | Dictionary | Template to use when creating new manifest file |
-
+|                           |            |                            |
+| SCRIPT_VERBOSE            | Boolean    | Enable verbose logging     |
+| SCRIPT_LOGFILE            | Path       | If defined, script will log to file |
 
 
 
