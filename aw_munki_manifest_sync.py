@@ -15,7 +15,6 @@ except (ImportError, AttributeError):
     from pathlib2 import Path
 
 
-
 # For Python 2 compatibility
 __metaclass__ = type
 
@@ -104,7 +103,7 @@ class Manifest:
     def add_included(self, manifests, definer="", relative_dir=""):
         """Adds nested manifest. Ensures uniquness if necessary"""
 
-        if not "included_manifests" in self.data:
+        if "included_manifests" not in self.data:
             self.data["included_manifests"] = []
             self.changed = True
 
