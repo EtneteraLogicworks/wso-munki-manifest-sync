@@ -274,6 +274,7 @@ def extract_users(rawusers):
 
 def extract_smartgroups(rawsmartgroups):
     """Constructs smartgroups data structure from AirWatch response"""
+
     smartgroups = {}
     for rsmartgroup in rawsmartgroups["SmartGroups"]:
         if "Name" in rsmartgroup:
