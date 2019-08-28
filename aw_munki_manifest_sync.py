@@ -1,21 +1,20 @@
 #!/usr/bin/env python
 
-import plistlib
-import sys
 import argparse
 import copy
 import logging
+import plistlib
+import sys
+
+from aw_config import *
+from PyVMwareAirWatch.pyairwatch.client import AirWatchAPI, AirWatchAPIError
 
 try:
     from pathlib import Path
 except (ImportError, AttributeError):
     from pathlib2 import Path
 
-# Load configuration file
-from aw_config import *
 
-from PyVMwareAirWatch.pyairwatch.client import AirWatchAPI
-from PyVMwareAirWatch.pyairwatch.client import AirWatchAPIError
 
 # For Python 2 compatibility
 __metaclass__ = type
