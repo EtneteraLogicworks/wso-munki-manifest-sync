@@ -1,0 +1,3 @@
+[submodule "PyVMwareAirWatch"]
+	path = PyVMwareAirWatch
+	url = https://github.com/EtneteraLogicworks/PyVMwareAirWatch
