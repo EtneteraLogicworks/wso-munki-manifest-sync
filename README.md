@@ -1,50 +1,79 @@
 # README
 
-Script `aw_munki_manifest_sync.py` uses AirWatch API to retrive information about
-relation between following objects: macOS devices, enrollment users, usergroups and device
-smart groups. Next it creates Munki Manifest structure mirroring current state of AirWatch
-object relations. Related user, usergroup and smartgroup manifests are added/removed
-in device manifest `included_manifest` array.
+Script `aw_munki_manifest_sync.py` uses VMware Workspace ONE UEM API (formerly AirWatch)
+to retrive information about relationships between following objects:
+
+- enrolled macOS **devices**
+- device **enrollment users**
+- **smartgroups** devices are members of
+- **usergroups** enrollment users are members of
+
+Next it creates Munki manifest structure mirroring current state of WSO object
+relationships.
+
+
+## Dependencies
+
+`aw_munki_manifest_sync.py` was written to be compatible with both Python 2 and Python 3.
+However Python 2 compatibility is no longer tested and might be dropped in the near
+future.
+
+Script uses [PyVMwareAirWatch](https://github.com/jprichards/PyVMwareAirWatch) library
+created by VMware developer [jprichards](https://github.com/jprichards). Submodule
+in this repo is the [fork](https://github.com/EtneteraLogicworks/PyVMwareAirWatch) of
+`PyVMwareAirWatch` library.
 
 
 ## Operation
 
-When run without any options script synchronizes relation of all macOS devices,
-with enrollment users, user's usergroups and device's smartgroups.
+When ran without any options, script synchronizes all macOS devices, with enrollment users,
+user's usergroups and device's smartgroups. Intention is to run script at regular
+intervals. It is possible to run the synchronization only for a single device (See
+`--serial` option bellow).
 
-Intention is to run script on regular intervals.
+If manifest file does not exist script will create it. Script does not create directories.
+Administrator must create all necessary directories before running the script.
 
-If manifest file does not exist script will create it. If relation between device and
-user, usergroup or smargroup has changed list of nested manifest in device manifest is
-updated. Manifest files are never deleted by this script
+If relationship between device, user, usergroup or smargroup has changed, list of nested
+manifest in device or user manifest is updated. Manifest files are never deleted
+by this script.
+
+Only manifests containing `airwatch_` string are managed by this script (with exception
+of device manifests named using only serial number). Administrator can edit all manifest
+created by `aw_munki_manifest_sync.py`.
 
 ### Options
 
-- `--serial SERIAL_NUMBER` causes script only to synchronizce provided serial number.
-   with assigned enrollment user. Intention is to run this during device enrollment
-   and link device manifest to correct group manifest with actual software items.
+- `--serial SERIAL_NUMBER` causes script only to synchronize single device using
+   provided serial number. Intention is to run this during the device enrollment
+   shorty after user is assigned to the device.
 
 ### Example
 
-AirWatch state:
+WSO state:
 
 - Device: `C02HW5123456`
-- Enrollment user for device `C02HW5P5DRVG`: `bob`
-- Usergroups `bob` is member of: [ `g1`, `g2` ]
-- Smartgroups `C02HW5123456` is memeber of: [ `sg1` ]
+- Device `C02HW5123456` Enrollment User: `bob`
+- User `bob` is member of Usergroups: [ `g1`, `g2` ]
+- Device `C02HW5123456` is member of Smartgroups: [ `sg1` ]
 
 Will result in following Munki manifest structure:
 
 - `manifests/C02HW5123456`
-    - nested manifest `airwatch_user_bob`: `manifests/users/airwatch_user_bob`
-    - nested manifest `airwatch_usergroup_g1`: `manifests/groups/usergroups/airwatch_usergroup_g1`
-    - nested manifest `airwatch_usergroup_g2`: `manifests/groups/usergroups/airwatch_usergroup_g2`
-    - nested manifest `airwatch_smartgroup_sg1`: `manifests/groups/smartgroups/airwatch_smartgroup_sg1`
+    - nested manifest `users/airwatch_user_bob`:
+    - nested manifest `groups/smartgroups/airwatch_smartgroup_sg1`
+- `manifests/groups/smartgroups/airwatch_smartgroup_sg1`
+- `manifests/users/airwatch_user_bob`
+    - nested manifest `groups/usergroups/airwatch_usergroup_g1`:
+    - nested manifest `groups/usergroups/airwatch_usergroup_g2`
+- `manifests/groups/usergroups/airwatch_usergroup_g1`
+- `manifests/groups/usergroups/airwatch_usergroup_g2`
+
 
 ## Configuration
 
-Script is configured via config file `aw_config.py` which must be located in same directory
-as script itself.
+Script is configured via config file `aw_config.py` which must be located in the
+same directory as script itself.
 
 | Key                       | Type       |                            |
 | ------------------------- | ---------- | -------------------------- |
