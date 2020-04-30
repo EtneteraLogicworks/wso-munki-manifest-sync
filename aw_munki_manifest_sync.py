@@ -18,7 +18,7 @@ except (ImportError, AttributeError):
 # For Python 2 compatibility
 __metaclass__ = type
 
-# Helper functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Helper functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 def setup_custom_logger(name):
@@ -56,7 +56,7 @@ def log(level, message):
         LOGGER.debug(message)
 
 
-# Classes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Classes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 class Manifest:
@@ -191,7 +191,7 @@ class UsergroupManifest(Manifest):
         super(UsergroupManifest, self).load()
 
 
-# Manifest handlers (manifest logic) - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# Manifest handlers (manifest logic) - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 def handle_device_manifest(device):
@@ -257,7 +257,7 @@ def handle_usergroup_manifests(groups):
             usergroup_manifest.save()
 
 
-# Extracting information from obtained JSON - - - - - - - - - - - - - - - - - - - - - - -
+# Extracting information from obtained JSON - - - - - - - - - - - - - - - - - - - - - -
 
 
 def extract_users(rawusers):
@@ -345,7 +345,7 @@ def assign_groups(users, group, members):
                     member["UserName"], group["name"]
                 ),
             )
-            exit(1)
+            sys.exit(1)
 
 
 def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
@@ -354,7 +354,8 @@ def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
     for smartmember in smartmembers:
         if smartmember["Platform"] != AIRWATCH_MAC_PLATFORM:
             continue
-        elif smartmember["Id"] in devices:
+
+        if smartmember["Id"] in devices:
             devices[smartmember["Id"]]["smartgroups"].append(smartgroup["name"])
         else:
             if not single_device:
@@ -364,7 +365,7 @@ def assign_smartgroups(devices, smartgroup, smartmembers, single_device=False):
                         smartmember["Id"], smartgroup["name"]
                     ),
                 )
-                exit(1)
+                sys.exit(1)
 
 
 def assign_user(users, devices):
@@ -375,7 +376,7 @@ def assign_user(users, devices):
             device["user"] = users[device["user"]]
 
 
-# Query API a get necessary information  - - - - - - - - - - - - - - - - - - - - - - - - -
+# Query API a get necessary information  - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 def sync_all_devices(api):
@@ -463,10 +464,11 @@ def sync_device(api, serial_number):
             # Assin smartgroups to devices
             assign_smartgroups(devices, smartgroup, smartmembers, single_device=True)
 
+    log("DEBUG", "Processing device manifest")
     handle_device_manifests(devices)
 
 
-# Main: run script, parse arguments anc sync those manifests - - - - - - - - - - - - - - -
+# Main: run script, parse arguments anc sync those manifests - - - - - - - - - - - - - -
 def main(args):
     """Just main"""
 
@@ -490,7 +492,7 @@ def main(args):
         sync_all_devices(api)
 
     log("INFO", "Script run end")
-    exit(0)
+    sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -506,4 +508,4 @@ if __name__ == "__main__":
     except AirWatchAPIError as aw_error:
         log("ERROR", "Problem when talking with AirWatch API")
         log("ERROR", aw_error)
-        exit(1)
+        sys.exit(1)
