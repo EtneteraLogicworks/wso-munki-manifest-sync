@@ -263,6 +263,9 @@ def handle_usergroup_manifests(groups):
 def extract_users(rawusers):
     """Constructs user data structure from AirWatch response"""
 
+    if not isinstance(rawusers, dict):
+        return {}
+
     users = {}
     for ruser in rawusers["Users"]:
         if "UserName" in ruser:
@@ -274,6 +277,9 @@ def extract_users(rawusers):
 
 def extract_smartgroups(rawsmartgroups):
     """Constructs smartgroups data structure from AirWatch response"""
+
+    if not isinstance(rawsmartgroups, dict):
+        return {}
 
     smartgroups = {}
     for rsmartgroup in rawsmartgroups["SmartGroups"]:
@@ -288,6 +294,9 @@ def extract_smartgroups(rawsmartgroups):
 
 def extract_groups(rawgroups):
     """Constructs usergroup data structure from AirWatch response"""
+
+    if not isinstance(rawgroups, dict):
+        return {}
 
     groups = {}
     for rgroup in rawgroups["ResultSet"]:
@@ -304,6 +313,9 @@ def extract_groups(rawgroups):
 
 def extract_devices(rawdevices):
     """Constructs device data structure from AirWatch response"""
+
+    if not isinstance(rawdevices, dict):
+        return {}
 
     devices = {}
     for rdevice in rawdevices["Devices"]:
