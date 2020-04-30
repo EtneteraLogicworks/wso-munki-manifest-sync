@@ -26,8 +26,8 @@ in this repo is the [fork](https://github.com/EtneteraLogicworks/PyVMwareAirWatc
 
 ## Operation
 
-When ran without any options, script synchronizes all macOS devices, with enrollment users,
-user's usergroups and device's smartgroups. Intention is to run script at regular
+When ran without any options, script synchronizes all macOS devices, with enrollment
+users, user's usergroups and device's smartgroups. Intention is to run script at regular
 intervals. It is possible to run the synchronization only for a single device (See
 `--serial` option bellow).
 
@@ -98,6 +98,3 @@ same directory as script itself.
 |                           |            |                            |
 | SCRIPT_VERBOSE            | Boolean    | Enable verbose logging     |
 | SCRIPT_LOGFILE            | Path       | If defined, script will log to file |
-
-
-
