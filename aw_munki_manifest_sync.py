@@ -449,8 +449,25 @@ def sync_device(api, serial_number):
     devices[item_id]["serial"] = serial_number
     devices[item_id]["smartgroups"] = []
 
+    # Device has an enrollment user specified
     if "UserName" in rawdevice:
+        # Set device user
         devices[item_id]["user"] = {"name": rawdevice["UserName"]}
+        # Create users dictionary with single user
+        users = {rawdevice["UserName"]: {"name": rawdevice["UserName"], "groups": []}}
+        # Get desired AirWatch usergroups
+        rawgroups = api.usergroups.search()
+        groups = extract_groups(rawgroups)
+        # Get desired group memberships
+        for group in groups.values():
+            rawmembers = api.usergroups.search_users(id=group["id"])
+            if isinstance(rawmembers, dict):
+                members = rawmembers["EnrollmentUser"]
+                # Assign groups to users
+                log("DEBUG", "Assigning groups to users")
+                assign_groups(users, group, members)
+        log("DEBUG", "Processing user manifest")
+        handle_user_manifests(users)
 
     # Get desired AirWatch smartgroups
     rawsmartgroups = api.smartgroups.search()
