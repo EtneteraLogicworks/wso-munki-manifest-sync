@@ -88,6 +88,7 @@ same directory as script itself.
 | AIRWATCH_USERGROUPS       | Array      | List of usergroups which should be synced |
 | AIRWATCH_SMARTGROUPS      | Array      | List of smartgroups which should be synced |
 | AIRWATCH_USERS_IGNORE     | Array      | List of user which should not be synced. Good for exlucing staging users |
+| AIRWATCH_API_REQUEST_PAGESIZE | Integer | Maximum number of items returned by single API call. Increase if you have more than 500 users/groups/devices/etc. |
 |                           |            |                            |
 | MANIFEST_DIR              | Path       | Absolute path to manifest directory |
 | MANIFEST_DEVICE_DIR       | String     | Relative path to device manifest subdirectory |

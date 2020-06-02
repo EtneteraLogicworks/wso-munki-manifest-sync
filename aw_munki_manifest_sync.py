@@ -383,16 +383,18 @@ def sync_all_devices(api):
     """Syncs all manifests"""
 
     # Get all AirWatch users
-    rawusers = api.users.search()
+    rawusers = api.users.search(pagesize=AIRWATCH_API_REQUEST_PAGESIZE)
     users = extract_users(rawusers)
 
     # Get desired AirWatch groups
-    rawgroups = api.usergroups.search()
+    rawgroups = api.usergroups.search(pagesize=AIRWATCH_API_REQUEST_PAGESIZE)
     groups = extract_groups(rawgroups)
 
     # Get desired group memberships
     for group in groups.values():
-        rawmembers = api.usergroups.search_users(id=group["id"])
+        rawmembers = api.usergroups.search_users(
+            id=group["id"], pagesize=AIRWATCH_API_REQUEST_PAGESIZE
+        )
         if isinstance(rawmembers, dict):
             members = rawmembers["EnrollmentUser"]
             # Assign groups to users
@@ -400,19 +402,23 @@ def sync_all_devices(api):
             assign_groups(users, group, members)
 
     # Get all macOS devices
-    rawdevices = api.devices.search_all(platform=AIRWATCH_MAC_PLATFORM)
+    rawdevices = api.devices.search_all(
+        platform=AIRWATCH_MAC_PLATFORM, pagesize=AIRWATCH_API_REQUEST_PAGESIZE
+    )
     devices = extract_devices(rawdevices)
 
     # Assign users to devices
     assign_user(users, devices)
 
     # Get desired AirWatch smartgroups
-    rawsmartgroups = api.smartgroups.search()
+    rawsmartgroups = api.smartgroups.search(pagesize=AIRWATCH_API_REQUEST_PAGESIZE)
     smartgroups = extract_smartgroups(rawsmartgroups)
 
     # Get desired smartgroup memberships
     for smartgroup in smartgroups.values():
-        rawsmartmembers = api.smartgroups.get_devices(id=smartgroup["id"])
+        rawsmartmembers = api.smartgroups.get_devices(
+            id=smartgroup["id"], pagesize=AIRWATCH_API_REQUEST_PAGESIZE
+        )
         if isinstance(rawsmartmembers, dict):
             smartmembers = rawsmartmembers["Devices"]
             # Assign smartgroups to devices
@@ -456,11 +462,13 @@ def sync_device(api, serial_number):
         # Create users dictionary with single user
         users = {rawdevice["UserName"]: {"name": rawdevice["UserName"], "groups": []}}
         # Get desired AirWatch usergroups
-        rawgroups = api.usergroups.search()
+        rawgroups = api.usergroups.search(pagesize=AIRWATCH_API_REQUEST_PAGESIZE)
         groups = extract_groups(rawgroups)
         # Get desired group memberships
         for group in groups.values():
-            rawmembers = api.usergroups.search_users(id=group["id"])
+            rawmembers = api.usergroups.search_users(
+                id=group["id"], pagesize=AIRWATCH_API_REQUEST_PAGESIZE
+            )
             if isinstance(rawmembers, dict):
                 members = rawmembers["EnrollmentUser"]
                 # Assign groups to users
@@ -470,12 +478,14 @@ def sync_device(api, serial_number):
         handle_user_manifests(users)
 
     # Get desired AirWatch smartgroups
-    rawsmartgroups = api.smartgroups.search()
+    rawsmartgroups = api.smartgroups.search(pagesize=AIRWATCH_API_REQUEST_PAGESIZE)
     smartgroups = extract_smartgroups(rawsmartgroups)
 
     # Get desired smartgroup memberships
     for smartgroup in smartgroups.values():
-        rawsmartmembers = api.smartgroups.get_devices(id=smartgroup["id"])
+        rawsmartmembers = api.smartgroups.get_devices(
+            id=smartgroup["id"], pagesize=AIRWATCH_API_REQUEST_PAGESIZE
+        )
         if isinstance(rawsmartmembers, dict):
             smartmembers = rawsmartmembers["Devices"]
             # Assin smartgroups to devices
