@@ -13,7 +13,6 @@ AIRWATCH_ALL_SMARTGROUPS = False
 AIRWATCH_USERGROUPS = ["SomeUserGroup"]
 AIRWATCH_SMARTGROUPS = ["SomeSmartGroup"]
 AIRWATCH_USERS_IGNORE = ["Default Staging User", "staging"]
-AIRWATCH_API_REQUEST_PAGESIZE = 500
 
 # Munki paths config
 MANIFEST_DIR = "/path/to/munki/repo/manifests"
